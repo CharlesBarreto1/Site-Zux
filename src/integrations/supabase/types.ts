@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          active: boolean
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          password_hash: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          password_hash: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          password_hash?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       banners: {
         Row: {
           active: boolean | null
@@ -56,6 +86,30 @@ export type Database = {
         }
         Relationships: []
       }
+      cities: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          name: string
+          state: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name: string
+          state: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          name?: string
+          state?: string
+        }
+        Relationships: []
+      }
       internet_plans: {
         Row: {
           active: boolean | null
@@ -94,46 +148,88 @@ export type Database = {
       }
       leads: {
         Row: {
+          address_number: string | null
+          birth_date: string | null
           city: string | null
+          cpf: string | null
           created_at: string
           email: string
+          full_name: string | null
           id: string
+          invoice_due_day: number | null
+          lead_type: string | null
+          lgpd_consent: boolean | null
           message: string | null
           name: string
+          observations: string | null
           phone: string | null
           plan_name: string | null
           plan_type: string | null
+          preferred_installation_period: string | null
+          reference_point: string | null
+          second_phone: string | null
+          selected_city: string | null
           source: string | null
           status: string | null
+          street_name: string | null
           updated_at: string
+          zip_code: string | null
         }
         Insert: {
+          address_number?: string | null
+          birth_date?: string | null
           city?: string | null
+          cpf?: string | null
           created_at?: string
           email: string
+          full_name?: string | null
           id?: string
+          invoice_due_day?: number | null
+          lead_type?: string | null
+          lgpd_consent?: boolean | null
           message?: string | null
           name: string
+          observations?: string | null
           phone?: string | null
           plan_name?: string | null
           plan_type?: string | null
+          preferred_installation_period?: string | null
+          reference_point?: string | null
+          second_phone?: string | null
+          selected_city?: string | null
           source?: string | null
           status?: string | null
+          street_name?: string | null
           updated_at?: string
+          zip_code?: string | null
         }
         Update: {
+          address_number?: string | null
+          birth_date?: string | null
           city?: string | null
+          cpf?: string | null
           created_at?: string
           email?: string
+          full_name?: string | null
           id?: string
+          invoice_due_day?: number | null
+          lead_type?: string | null
+          lgpd_consent?: boolean | null
           message?: string | null
           name?: string
+          observations?: string | null
           phone?: string | null
           plan_name?: string | null
           plan_type?: string | null
+          preferred_installation_period?: string | null
+          reference_point?: string | null
+          second_phone?: string | null
+          selected_city?: string | null
           source?: string | null
           status?: string | null
+          street_name?: string | null
           updated_at?: string
+          zip_code?: string | null
         }
         Relationships: []
       }

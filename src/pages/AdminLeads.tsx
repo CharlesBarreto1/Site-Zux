@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,8 @@ import {
   PhoneOff, 
   CheckCircle, 
   AlertTriangle,
-  Calendar
+  Calendar,
+  ArrowLeft
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -31,7 +33,17 @@ const AdminLeads = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('todos');
+  const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Check admin authentication
+  useEffect(() => {
+    const adminUser = localStorage.getItem('admin_user');
+    if (!adminUser) {
+      navigate('/admin/login');
+      return;
+    }
+  }, [navigate]);
 
   useEffect(() => {
     fetchLeads();
@@ -127,12 +139,27 @@ const AdminLeads = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-3">
+              <Button variant="ghost" onClick={() => navigate('/admin')}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Voltar
+              </Button>
+              <h1 className="text-xl font-semibold text-gray-900">Gerenciar Leads</h1>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Gerenciamento de Leads
-          </h1>
+          </h2>
           <p className="text-gray-600">
             Gerencie todos os leads capturados pelo site da Zux Internet
           </p>

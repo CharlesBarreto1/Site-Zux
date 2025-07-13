@@ -10,15 +10,11 @@ const Footer = () => {
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
           {/* Company Info */}
           <div className="space-y-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-yellow-400 rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold text-xl">Z</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">Zux</h1>
-                <p className="text-xs text-gray-400 -mt-1">Internet</p>
-              </div>
-            </div>
+            <img 
+              src="/lovable-uploads/8b9b1ca3-626f-4f88-bf1d-226672ebc39f.png" 
+              alt="Zux Internet" 
+              className="h-10 w-auto mb-4"
+            />
             
             <p className="text-gray-400 leading-relaxed">
               Conectando você ao extraordinário através de internet fibra ótica de altíssima qualidade 

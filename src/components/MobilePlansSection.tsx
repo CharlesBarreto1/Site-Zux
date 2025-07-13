@@ -141,7 +141,9 @@ const MobilePlansSection = () => {
                 </ul>
                 
                 <Button 
-                  onClick={() => handleContractPlan(plan.name)}
+                  onClick={() => {
+                    window.location.href = '/signup';
+                  }}
                   className={`w-full ${plan.popular ? 'btn-premium' : 'btn-secondary'}`}
                 >
                   Contratar Agora
