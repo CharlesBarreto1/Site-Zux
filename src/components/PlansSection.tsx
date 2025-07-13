@@ -94,6 +94,11 @@ const PlansSection = () => {
                   <Button 
                     className={`w-full ${plan.popular ? 'btn-premium' : 'btn-outline-premium'}`}
                     size="lg"
+                    onClick={() => {
+                      const message = `Olá! Gostaria de contratar o plano ${plan.name} da Zux Internet. Podem me ajudar?`;
+                      const whatsappUrl = `https://wa.me/554431102530?text=${encodeURIComponent(message)}`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
                   >
                     Contratar {plan.name}
                   </Button>

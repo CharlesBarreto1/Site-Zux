@@ -13,11 +13,11 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <img 
-              src="/lovable-uploads/0fab522f-ec24-41f2-a85c-fcdf02fab40e.png" 
-              alt="Zux Internet" 
-              className="h-12 w-auto"
-            />
+          <img 
+            src="/lovable-uploads/8b9b1ca3-626f-4f88-bf1d-226672ebc39f.png" 
+            alt="Zux Internet" 
+            className="h-12 w-auto"
+          />
           </div>
 
           {/* Desktop Navigation */}
