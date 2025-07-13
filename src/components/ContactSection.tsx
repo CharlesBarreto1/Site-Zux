@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin, Clock, Instagram, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -27,11 +28,31 @@ const ContactSection = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Create WhatsApp message
-    const message = `Olá! Gostaria de mais informações sobre os planos da Zux Internet.
+    try {
+      // Salvar no Supabase
+      const { error } = await supabase
+        .from('leads')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            city: formData.city,
+            message: formData.message,
+            plan_type: 'fibra',
+            source: 'formulario_contato'
+          }
+        ]);
+
+      if (error) {
+        console.error('Erro ao salvar lead:', error);
+      }
+
+      // Create WhatsApp message
+      const message = `Olá! Gostaria de mais informações sobre os planos da Zux Internet.
 
 *Dados de Contato:*
 Nome: ${formData.name}
@@ -42,22 +63,30 @@ Cidade: ${formData.city}
 *Mensagem:*
 ${formData.message}`;
 
-    const whatsappUrl = `https://wa.me/554431102530?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+      const whatsappUrl = `https://wa.me/554431102530?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
 
-    toast({
-      title: "Redirecionando para WhatsApp",
-      description: "Você será redirecionado para nosso atendimento no WhatsApp.",
-    });
+      toast({
+        title: "Sucesso!",
+        description: "Seus dados foram enviados e você será redirecionado para nosso WhatsApp.",
+      });
 
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      city: '',
-      message: ''
-    });
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        city: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Erro no envio:', error);
+      toast({
+        title: "Erro",
+        description: "Houve um problema no envio. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
