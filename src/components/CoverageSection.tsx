@@ -27,7 +27,7 @@ const CoverageSection = () => {
 
   const checkCoverage = () => {
     if (selectedCity) {
-      window.open(`https://wa.me/5544311025300?text=Olá! Gostaria de verificar a cobertura em ${selectedCity}`, '_blank');
+      window.open(`https://wa.me/554431102530?text=Olá! Gostaria de verificar a cobertura em ${selectedCity}`, '_blank');
     }
   };
 

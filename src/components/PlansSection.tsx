@@ -100,7 +100,7 @@ const PlansSection = () => {
                   <Button 
                     variant="ghost" 
                     className="w-full text-gray-600 hover:text-red-500"
-                    onClick={() => window.open('https://wa.me/5544311025300', '_blank')}
+                    onClick={() => window.open('https://wa.me/554431102530', '_blank')}
                   >
                     Falar com Consultor
                   </Button>
@@ -116,7 +116,7 @@ const PlansSection = () => {
             <strong>Empresas:</strong> Temos planos corporativos personalizados. 
             <button 
               className="text-red-500 hover:text-red-600 ml-1 font-semibold"
-              onClick={() => window.open('https://wa.me/5544311025300', '_blank')}
+              onClick={() => window.open('https://wa.me/554431102530', '_blank')}
             >
               Solicite um orçamento
             </button>

@@ -27,7 +27,7 @@ const Footer = () => {
 
             <div className="flex space-x-4">
               <a 
-                href="https://wa.me/5544311025300" 
+                href="https://wa.me/554431102530"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors"
@@ -129,7 +129,7 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-red-400" />
                 <a 
-                  href="https://wa.me/5544311025300" 
+                  href="https://wa.me/554431102530" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors"

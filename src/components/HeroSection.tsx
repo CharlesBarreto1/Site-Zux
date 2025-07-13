@@ -74,7 +74,7 @@ const HeroSection = () => {
                 size="lg" 
                 variant="outline" 
                 className="btn-outline-premium"
-                onClick={() => window.open('https://wa.me/5544311025300', '_blank')}
+                onClick={() => window.open('https://wa.me/554431102530', '_blank')}
               >
                 Falar no WhatsApp
               </Button>

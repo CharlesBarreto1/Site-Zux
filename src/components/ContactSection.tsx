@@ -42,7 +42,7 @@ Cidade: ${formData.city}
 *Mensagem:*
 ${formData.message}`;
 
-    const whatsappUrl = `https://wa.me/5544311025300?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/554431102530?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 
     toast({
@@ -191,7 +191,7 @@ ${formData.message}`;
                 <div>
                   <h4 className="font-bold text-black mb-1">Telefone</h4>
                   <a 
-                    href="https://wa.me/5544311025300" 
+                    href="https://wa.me/554431102530" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-red-500 hover:text-red-600 font-semibold"

@@ -13,19 +13,18 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-yellow-400 rounded-lg flex items-center justify-center">
-              <span className="text-black font-bold text-xl">Z</span>
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white">Zux</h1>
-              <p className="text-xs text-gray-400 -mt-1">Internet</p>
-            </div>
+            <img 
+              src="/lovable-uploads/0fab522f-ec24-41f2-a85c-fcdf02fab40e.png" 
+              alt="Zux Internet" 
+              className="h-12 w-auto"
+            />
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#inicio" className="text-white hover:text-red-400 transition-colors">Início</a>
             <a href="#planos" className="text-white hover:text-red-400 transition-colors">Planos</a>
+            <a href="#planos-5g" className="text-white hover:text-red-400 transition-colors">5G Móvel</a>
             <a href="#sobre" className="text-white hover:text-red-400 transition-colors">Sobre</a>
             <a href="#cobertura" className="text-white hover:text-red-400 transition-colors">Cobertura</a>
             <a href="#contato" className="text-white hover:text-red-400 transition-colors">Contato</a>
@@ -36,7 +35,7 @@ const Header = () => {
             <div className="flex items-center space-x-2 text-sm">
               <Phone className="w-4 h-4 text-red-400" />
               <a 
-                href="https://wa.me/5544311025300" 
+                href="https://wa.me/554431102530" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-white transition-colors"
@@ -44,6 +43,15 @@ const Header = () => {
                 (44) 3110-2530
               </a>
             </div>
+            <Button 
+              variant="outline" 
+              asChild
+              className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+            >
+              <a href="https://erp.zux.net.br/central/" target="_blank" rel="noopener noreferrer">
+                Central do Assinante
+              </a>
+            </Button>
             <Button className="btn-premium">
               Contrate Agora
             </Button>
@@ -64,13 +72,14 @@ const Header = () => {
             <nav className="flex flex-col space-y-4">
               <a href="#inicio" className="text-white hover:text-red-400 px-4 py-2">Início</a>
               <a href="#planos" className="text-white hover:text-red-400 px-4 py-2">Planos</a>
+              <a href="#planos-5g" className="text-white hover:text-red-400 px-4 py-2">5G Móvel</a>
               <a href="#sobre" className="text-white hover:text-red-400 px-4 py-2">Sobre</a>
               <a href="#cobertura" className="text-white hover:text-red-400 px-4 py-2">Cobertura</a>
               <a href="#contato" className="text-white hover:text-red-400 px-4 py-2">Contato</a>
               <div className="px-4 pt-4 border-t border-gray-700">
                 <div className="flex items-center space-x-4 mb-4">
                   <a 
-                    href="https://wa.me/5544311025300" 
+                    href="https://wa.me/554431102530" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center space-x-2 text-gray-300"
@@ -79,9 +88,20 @@ const Header = () => {
                     <span>(44) 3110-2530</span>
                   </a>
                 </div>
-                <Button className="btn-premium w-full">
-                  Contrate Agora
-                </Button>
+                <div className="space-y-2">
+                  <Button 
+                    variant="outline" 
+                    asChild
+                    className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white w-full"
+                  >
+                    <a href="https://erp.zux.net.br/central/" target="_blank" rel="noopener noreferrer">
+                      Central do Assinante
+                    </a>
+                  </Button>
+                  <Button className="btn-premium w-full">
+                    Contrate Agora
+                  </Button>
+                </div>
               </div>
             </nav>
           </div>
