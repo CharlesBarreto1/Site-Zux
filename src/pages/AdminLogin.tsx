@@ -37,10 +37,8 @@ const AdminLogin = () => {
         return;
       }
 
-      // For initial setup, accept the plain password
-      const isValidPassword = password === 'CBM@4552a%' || 
-        (adminData.password_hash !== '$2b$10$placeholder' && 
-         await bcrypt.compare(password, adminData.password_hash));
+      // Validate password using bcrypt
+      const isValidPassword = await bcrypt.compare(password, adminData.password_hash);
 
       if (!isValidPassword) {
         toast({
@@ -49,15 +47,6 @@ const AdminLogin = () => {
           variant: "destructive",
         });
         return;
-      }
-
-      // If using the initial password, update to hashed version
-      if (password === 'CBM@4552a%' && adminData.password_hash === '$2b$10$placeholder') {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await supabase
-          .from('admin_users')
-          .update({ password_hash: hashedPassword })
-          .eq('id', adminData.id);
       }
 
       // Store admin session
