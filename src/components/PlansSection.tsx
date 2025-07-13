@@ -7,7 +7,7 @@ const PlansSection = () => {
     {
       name: "Zux Pro",
       speed: "700 Mbps",
-      price: "R$ 79,90",
+      price: "R$ 129,90",
       popular: false,
       icon: <Zap className="w-6 h-6" />,
       color: "from-gray-600 to-gray-800",
@@ -16,14 +16,12 @@ const PlansSection = () => {
         "Wi-Fi 6 incluso",
         "Suporte técnico 24h",
         "Instalação gratuita",
-        "3 meses de fidelidade",
-        "Apps de streaming inclusos"
       ]
     },
     {
       name: "Zux Ultra",
       speed: "1 Giga",
-      price: "R$ 99,90",
+      price: "R$ 159,90",
       popular: true,
       icon: <Crown className="w-6 h-6" />,
       color: "from-red-500 to-yellow-400",
@@ -32,10 +30,6 @@ const PlansSection = () => {
         "Wi-Fi 6E Premium",
         "Suporte VIP 24h",
         "Instalação premium gratuita",
-        "Sem fidelidade",
-        "Todos os apps de streaming",
-        "IP fixo grátis",
-        "Backup 4G incluso"
       ]
     }
   ];
