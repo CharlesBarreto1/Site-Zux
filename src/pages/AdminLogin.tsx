@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import bcrypt from 'bcryptjs';
+
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -37,8 +37,8 @@ const AdminLogin = () => {
         return;
       }
 
-      // Validate password using bcrypt
-      const isValidPassword = await bcrypt.compare(password, adminData.password_hash);
+      // Validate password using simple comparison
+      const isValidPassword = password === adminData.password_hash;
 
       if (!isValidPassword) {
         toast({
