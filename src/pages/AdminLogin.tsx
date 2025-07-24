@@ -32,7 +32,7 @@ const AdminLogin = () => {
         .select('*')
         .eq('email', email)
         .eq('active', true)
-        .single();
+        .maybeSingle();
 
       console.log('Resultado da busca:', { adminData, error });
       console.log('Tipo do error:', typeof error);
