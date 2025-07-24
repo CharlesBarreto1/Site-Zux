@@ -19,9 +19,13 @@ const AdminLogin = () => {
     e.preventDefault();
     setLoading(true);
 
+    console.log('=== ADMIN LOGIN DEBUG ===');
     console.log('Tentando login com:', { email, password });
+    console.log('Supabase client:', supabase);
 
     try {
+      console.log('Fazendo query no Supabase...');
+      
       // Check admin credentials
       const { data: adminData, error } = await supabase
         .from('admin_users')
@@ -31,6 +35,8 @@ const AdminLogin = () => {
         .single();
 
       console.log('Resultado da busca:', { adminData, error });
+      console.log('Tipo do error:', typeof error);
+      console.log('Tipo do adminData:', typeof adminData);
 
       if (error || !adminData) {
         toast({
