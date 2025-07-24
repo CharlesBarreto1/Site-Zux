@@ -9,6 +9,9 @@ import { supabase } from '@/integrations/supabase/client';
 
 
 const AdminLogin = () => {
+  console.log('=== AdminLogin component loaded ===');
+  console.log('Supabase import check:', typeof supabase);
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
