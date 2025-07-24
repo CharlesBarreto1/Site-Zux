@@ -19,6 +19,8 @@ const AdminLogin = () => {
     e.preventDefault();
     setLoading(true);
 
+    console.log('Tentando login com:', { email, password });
+
     try {
       // Check admin credentials
       const { data: adminData, error } = await supabase
@@ -27,6 +29,8 @@ const AdminLogin = () => {
         .eq('email', email)
         .eq('active', true)
         .single();
+
+      console.log('Resultado da busca:', { adminData, error });
 
       if (error || !adminData) {
         toast({
