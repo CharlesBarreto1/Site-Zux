@@ -206,7 +206,7 @@ const Signup = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-yellow-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-black/95 backdrop-blur-sm sticky top-0 z-50 border-b border-red-500/20">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <img 
             src="/lovable-uploads/8b9b1ca3-626f-4f88-bf1d-226672ebc39f.png" 
@@ -218,10 +218,10 @@ const Signup = () => {
             onClick={() => {
               window.open('https://wa.me/554431102530?text=Olá! Gostaria de contratar um plano da Zux Internet pelo WhatsApp.', '_blank');
             }}
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
           >
             <MessageCircle className="w-4 h-4" />
-            <span>Quero contratar pelo WhatsApp</span>
+            <span className="text-white">Quero contratar pelo WhatsApp</span>
           </Button>
         </div>
       </header>
