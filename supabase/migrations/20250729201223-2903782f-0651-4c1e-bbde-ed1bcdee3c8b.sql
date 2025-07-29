@@ -1,0 +1,1 @@
+UPDATE internet_plans SET price = 169.90, updated_at = now() WHERE id = 'd8f40def-2eec-4917-9396-71bf5fc12033';
