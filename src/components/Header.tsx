@@ -23,7 +23,19 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#inicio" className="text-white hover:text-red-400 transition-colors">Início</a>
-            <a href="#planos" className="text-white hover:text-red-400 transition-colors">Planos</a>
+            <a 
+              href="#planos" 
+              className="text-white hover:text-red-400 transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                const plansSection = document.getElementById('planos');
+                if (plansSection) {
+                  plansSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
+              Planos
+            </a>
             <a href="#planos-5g" className="text-white hover:text-red-400 transition-colors">5G Móvel</a>
             <a href="#sobre" className="text-white hover:text-red-400 transition-colors">Sobre</a>
             <a href="#cobertura" className="text-white hover:text-red-400 transition-colors">Cobertura</a>
@@ -52,7 +64,10 @@ const Header = () => {
                 Central do Assinante
               </a>
             </Button>
-            <Button className="btn-premium">
+            <Button 
+              className="btn-premium"
+              onClick={() => window.location.href = '/signup'}
+            >
               Contrate Agora
             </Button>
           </div>
@@ -71,7 +86,20 @@ const Header = () => {
           <div className="md:hidden bg-black/95 py-4 border-t border-red-500/20">
             <nav className="flex flex-col space-y-4">
               <a href="#inicio" className="text-white hover:text-red-400 px-4 py-2">Início</a>
-              <a href="#planos" className="text-white hover:text-red-400 px-4 py-2">Planos</a>
+              <a 
+                href="#planos" 
+                className="text-white hover:text-red-400 px-4 py-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const plansSection = document.getElementById('planos');
+                  if (plansSection) {
+                    plansSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                  setIsMenuOpen(false);
+                }}
+              >
+                Planos
+              </a>
               <a href="#planos-5g" className="text-white hover:text-red-400 px-4 py-2">5G Móvel</a>
               <a href="#sobre" className="text-white hover:text-red-400 px-4 py-2">Sobre</a>
               <a href="#cobertura" className="text-white hover:text-red-400 px-4 py-2">Cobertura</a>
@@ -98,7 +126,10 @@ const Header = () => {
                       Central do Assinante
                     </a>
                   </Button>
-                  <Button className="btn-premium w-full">
+                  <Button 
+                    className="btn-premium w-full"
+                    onClick={() => window.location.href = '/signup'}
+                  >
                     Contrate Agora
                   </Button>
                 </div>

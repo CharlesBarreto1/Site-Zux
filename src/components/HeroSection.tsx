@@ -66,7 +66,16 @@ const HeroSection = () => {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="btn-premium group">
+              <Button 
+                size="lg" 
+                className="btn-premium group"
+                onClick={() => {
+                  const plansSection = document.getElementById('planos');
+                  if (plansSection) {
+                    plansSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              >
                 Ver Planos
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
