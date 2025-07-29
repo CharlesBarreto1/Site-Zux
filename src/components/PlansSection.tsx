@@ -21,7 +21,7 @@ const PlansSection = () => {
     {
       name: "Zux Ultra",
       speed: "1 Giga",
-      price: "R$ 159,90",
+      price: "R$ 169,90",
       popular: true,
       icon: <Crown className="w-6 h-6" />,
       color: "from-red-500 to-yellow-400",
