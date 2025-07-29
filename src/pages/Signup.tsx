@@ -218,10 +218,10 @@ const Signup = () => {
             onClick={() => {
               window.open('https://wa.me/554431102530?text=Olá! Gostaria de contratar um plano da Zux Internet pelo WhatsApp.', '_blank');
             }}
-            className="flex items-center space-x-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+            className="flex items-center space-x-2 border-red-400 bg-red-500 text-white hover:bg-red-600 hover:border-red-500"
           >
             <MessageCircle className="w-4 h-4" />
-            <span className="text-white">Quero contratar pelo WhatsApp</span>
+            <span>Quero contratar pelo WhatsApp</span>
           </Button>
         </div>
       </header>
