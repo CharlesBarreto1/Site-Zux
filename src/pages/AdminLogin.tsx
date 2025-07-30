@@ -89,35 +89,37 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-gray-800 border-gray-700">
         <CardHeader className="text-center">
           <img 
             src="/lovable-uploads/8b9b1ca3-626f-4f88-bf1d-226672ebc39f.png" 
             alt="Zux Internet" 
             className="h-16 w-auto mx-auto mb-4"
           />
-          <CardTitle className="text-2xl">Painel Administrativo</CardTitle>
+          <CardTitle className="text-2xl text-white">Painel Administrativo</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email" className="text-white">E-mail</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
               />
             </div>
             <div>
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password" className="text-white">Senha</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400"
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
