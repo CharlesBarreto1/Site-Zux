@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { MessageCircle, Check } from 'lucide-react';
+import { MessageCircle, Check, ArrowLeft } from 'lucide-react';
 
 interface Plan {
   id: string;
@@ -36,6 +37,7 @@ interface City {
 }
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [mobilePlans, setMobilePlans] = useState<MobilePlan[]>([]);
@@ -208,11 +210,22 @@ const Signup = () => {
       {/* Header */}
       <header className="bg-black/95 backdrop-blur-sm sticky top-0 z-50 border-b border-red-500/20">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <img 
-            src="/lovable-uploads/8b9b1ca3-626f-4f88-bf1d-226672ebc39f.png" 
-            alt="Zux Internet" 
-            className="h-10 w-auto"
-          />
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/')}
+              className="text-white hover:text-red-400 flex items-center space-x-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Voltar</span>
+            </Button>
+            <img 
+              src="/lovable-uploads/8b9b1ca3-626f-4f88-bf1d-226672ebc39f.png" 
+              alt="Zux Internet" 
+              className="h-10 w-auto"
+            />
+          </div>
           <Button 
             variant="outline" 
             onClick={() => {
