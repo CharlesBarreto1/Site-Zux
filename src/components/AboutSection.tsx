@@ -61,8 +61,8 @@ const AboutSection = () => {
             <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6">
               <h3 className="text-xl font-bold text-yellow-400 mb-4">Localização</h3>
               <div className="space-y-2 text-gray-300">
-                <p><strong>Sede:</strong> Alameda dos Pintados, 116 - Centro</p>
-                <p>Engenheiro Beltrão - PR</p>
+                <p><strong>Sede:</strong> Avenida Liberdade 1141, Centro</p>
+                <p>Luiziana - PR, CEP: 87290-000</p>
                 <p><strong>Telefone:</strong> (44) 3110-2530</p>
                 <p><strong>E-mail:</strong> contato@zux.net.br</p>
               </div>
