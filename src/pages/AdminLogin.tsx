@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import bcrypt from 'bcryptjs';
 
 
 const AdminLogin = () => {
@@ -50,8 +51,29 @@ const AdminLogin = () => {
         return;
       }
 
-      // Validate password using simple comparison
-      const isValidPassword = password === adminData.password_hash;
+      // Validate password using bcrypt or fallback to plain text for migration
+      let isValidPassword = false;
+      
+      // First try bcrypt hashed password if available
+      if (adminData.bcrypt_password_hash) {
+        isValidPassword = await bcrypt.compare(password, adminData.bcrypt_password_hash);
+      } 
+      // Fallback to plain text comparison for existing passwords (will be hashed by trigger)
+      else if (adminData.password_hash) {
+        isValidPassword = password === adminData.password_hash;
+        
+        // If plain text password matches, update it to bcrypt hash
+        if (isValidPassword) {
+          const { error: updateError } = await supabase
+            .from('admin_users')
+            .update({ password_hash: password }) // Trigger will hash this
+            .eq('id', adminData.id);
+            
+          if (updateError) {
+            console.error('Failed to upgrade password security:', updateError);
+          }
+        }
+      }
 
       if (!isValidPassword) {
         toast({
