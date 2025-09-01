@@ -256,9 +256,9 @@ ${formData.message}`;
                 <div>
                   <h4 className="font-bold text-black mb-1">Endereço</h4>
                   <p className="text-gray-700">
-                    Alameda dos Pintados, 116 - Centro
+                    Avenida Liberdade 1141, Centro
                     <br />
-                    Engenheiro Beltrão - PR
+                    Luiziana - PR, CEP: 87290-000
                   </p>
                 </div>
               </div>

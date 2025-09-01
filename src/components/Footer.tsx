@@ -116,9 +116,9 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-red-400 flex-shrink-0 mt-1" />
                 <div className="text-gray-400 text-sm">
-                  Alameda dos Pintados, 116 - Centro
+                  Avenida Liberdade 1141, Centro
                   <br />
-                  Engenheiro Beltrão - PR
+                  Luiziana - PR, CEP: 87290-000
                 </div>
               </div>
               
