@@ -9,7 +9,6 @@ import { Switch } from '@/components/ui/switch';
 import { ArrowLeft, Plus, Edit, Trash2, Users, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import bcrypt from 'bcryptjs';
 
 interface AdminUser {
   id: string;
@@ -101,7 +100,7 @@ const AdminUsers = () => {
 
         // Only update password if provided
         if (formData.password) {
-          updateData.password_hash = await bcrypt.hash(formData.password, 10);
+          updateData.password_hash = formData.password; // Will be hashed by database trigger
         }
 
         const { error } = await supabase
@@ -122,14 +121,12 @@ const AdminUsers = () => {
           return;
         }
 
-        const hashedPassword = await bcrypt.hash(formData.password, 10);
-        
         const { error } = await supabase
           .from('admin_users')
           .insert({
             email: formData.email,
             name: formData.name,
-            password_hash: hashedPassword,
+            password_hash: formData.password, // Will be hashed by database trigger
             active: formData.active
           });
         
