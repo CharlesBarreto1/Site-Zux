@@ -1,25 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MapPin, Check, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
 
 const CoverageSection = () => {
   const [selectedCity, setSelectedCity] = useState('');
+  const [cities, setCities] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const cities = [
-    'Maringá-PR',
-    'Paiçandu-PR', 
-    'Astorga-PR',
-    'Jandaia do Sul-PR',
-    'Apucarana-PR',
-    'Arapongas-PR',
-    'Floresta-PR',
-    'Cianorte-PR',
-    'Campo Mourão-PR',
-    'Umuarama-PR',
-    'Barbosa Ferraz-PR',
-    'São Pedro do Ivaí-PR'
-  ];
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('cities')
+          .select('name, state')
+          .eq('active', true)
+          .order('name');
+
+        if (error) {
+          console.error('Error fetching cities:', error);
+          return;
+        }
+
+        const formattedCities = data.map(city => `${city.name} - ${city.state}`);
+        setCities(formattedCities);
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCities();
+  }, []);
 
   const handleCitySelect = (city: string) => {
     setSelectedCity(city);
@@ -52,7 +66,9 @@ const CoverageSection = () => {
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {cities.map((city, index) => (
+              {loading ? (
+                <div className="col-span-2 text-center text-gray-500">Carregando cidades...</div>
+              ) : cities.map((city, index) => (
                 <div 
                   key={index}
                   className="flex items-center space-x-3 bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-red-500/20"
@@ -65,8 +81,8 @@ const CoverageSection = () => {
                     <span className="font-semibold text-gray-800">{city}</span>
                     <div className="text-sm text-gray-500">Cobertura ativa</div>
                   </div>
-                </div>
-              ))}
+                 </div>
+               ))}
             </div>
 
             <div className="bg-gradient-to-r from-red-500/10 to-yellow-400/10 p-6 rounded-xl border border-red-500/20">
@@ -104,8 +120,9 @@ const CoverageSection = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
                   value={selectedCity}
                   onChange={(e) => setSelectedCity(e.target.value)}
+                  disabled={loading}
                 >
-                  <option value="">Escolha uma cidade...</option>
+                  <option value="">{loading ? "Carregando..." : "Escolha uma cidade..."}</option>
                   {cities.map((city, index) => (
                     <option key={index} value={city}>{city}</option>
                   ))}
@@ -155,7 +172,7 @@ const CoverageSection = () => {
               <div className="text-sm text-gray-400 mt-1">Tecnologia pura</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-400 mb-2">12+</div>
+              <div className="text-3xl font-bold text-yellow-400 mb-2">{cities.length}+</div>
               <div className="text-gray-300">Cidades</div>
               <div className="text-sm text-gray-400 mt-1">Em expansão</div>
             </div>

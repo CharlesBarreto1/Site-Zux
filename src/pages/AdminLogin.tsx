@@ -5,14 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import bcrypt from 'bcryptjs';
 
 
 const AdminLogin = () => {
-  console.log('=== AdminLogin component loaded ===');
-  console.log('Supabase import check:', typeof supabase);
-  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -23,73 +18,30 @@ const AdminLogin = () => {
     e.preventDefault();
     setLoading(true);
 
-    console.log('=== ADMIN LOGIN DEBUG ===');
-    console.log('Tentando login com:', { email, password });
-    console.log('Supabase client:', supabase);
-
     try {
-      console.log('Fazendo query no Supabase...');
-      
-      // Check admin credentials
-      const { data: adminData, error } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('email', email)
-        .eq('active', true)
-        .maybeSingle();
+      const response = await fetch('https://cxcwkxwlyjjlwzvnpwfp.supabase.co/functions/v1/admin-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4Y3dreHdseWpqbHd6dm5wd2ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0MDgwNzQsImV4cCI6MjA2Nzk4NDA3NH0.SSXEkZRBaAI4HgYIM1DyJPXIeAc00v9y5fr7ljxRZPQ`,
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      console.log('Resultado da busca:', { adminData, error });
-      console.log('Tipo do error:', typeof error);
-      console.log('Tipo do adminData:', typeof adminData);
+      const data = await response.json();
 
-      if (error || !adminData) {
+      if (!response.ok) {
         toast({
           title: "Erro de Login",
-          description: "Credenciais inválidas",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Validate password using bcrypt or fallback to plain text for migration
-      let isValidPassword = false;
-      
-      // First try bcrypt hashed password if available
-      if (adminData.bcrypt_password_hash) {
-        isValidPassword = await bcrypt.compare(password, adminData.bcrypt_password_hash);
-      } 
-      // Fallback to plain text comparison for existing passwords (will be hashed by trigger)
-      else if (adminData.password_hash) {
-        isValidPassword = password === adminData.password_hash;
-        
-        // If plain text password matches, update it to bcrypt hash
-        if (isValidPassword) {
-          const { error: updateError } = await supabase
-            .from('admin_users')
-            .update({ password_hash: password }) // Trigger will hash this
-            .eq('id', adminData.id);
-            
-          if (updateError) {
-            console.error('Failed to upgrade password security:', updateError);
-          }
-        }
-      }
-
-      if (!isValidPassword) {
-        toast({
-          title: "Erro de Login",
-          description: "Credenciais inválidas",
+          description: data.error || 'Credenciais inválidas',
           variant: "destructive",
         });
         return;
       }
 
       // Store admin session
-      localStorage.setItem('admin_user', JSON.stringify({
-        id: adminData.id,
-        email: adminData.email,
-        name: adminData.name
-      }));
+      localStorage.setItem('admin_user', JSON.stringify(data.user));
+      localStorage.setItem('admin_session', JSON.stringify(data.session));
 
       toast({
         title: "Login realizado",
@@ -97,6 +49,7 @@ const AdminLogin = () => {
       });
 
       navigate('/admin');
+      
     } catch (error) {
       console.error('Login error:', error);
       toast({
