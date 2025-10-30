@@ -5,6 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { AdminSessionValidator } from '@/lib/adminSessionValidator';
 
 
 const AdminLogin = () => {
@@ -19,29 +21,23 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://cxcwkxwlyjjlwzvnpwfp.supabase.co/functions/v1/admin-login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4Y3dreHdseWpqbHd6dm5wd2ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0MDgwNzQsImV4cCI6MjA2Nzk4NDA3NH0.SSXEkZRBaAI4HgYIM1DyJPXIeAc00v9y5fr7ljxRZPQ`,
-        },
-        body: JSON.stringify({ email, password }),
+      // Use Supabase client to invoke edge function
+      const { data, error } = await supabase.functions.invoke('admin-login', {
+        body: { email, password }
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      if (error || !data.success) {
+        const errorMessage = data?.error || error?.message || 'Credenciais inválidas';
         toast({
           title: "Erro de Login",
-          description: data.error || 'Credenciais inválidas',
+          description: errorMessage,
           variant: "destructive",
         });
         return;
       }
 
-      // Store admin session
-      localStorage.setItem('admin_user', JSON.stringify(data.user));
-      localStorage.setItem('admin_session', JSON.stringify(data.session));
+      // Store admin session using AdminSessionValidator
+      AdminSessionValidator.setSession(data.session, data.user);
 
       toast({
         title: "Login realizado",

@@ -20,7 +20,7 @@ export type Database = {
           admin_user_id: string | null
           created_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           new_values: Json | null
           old_values: Json | null
           record_id: string | null
@@ -32,7 +32,7 @@ export type Database = {
           admin_user_id?: string | null
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_values?: Json | null
           old_values?: Json | null
           record_id?: string | null
@@ -44,7 +44,7 @@ export type Database = {
           admin_user_id?: string | null
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_values?: Json | null
           old_values?: Json | null
           record_id?: string | null
@@ -283,6 +283,30 @@ export type Database = {
         }
         Relationships: []
       }
+      login_attempts: {
+        Row: {
+          attempted_at: string
+          email: string
+          id: string
+          ip_address: unknown
+          successful: boolean
+        }
+        Insert: {
+          attempted_at?: string
+          email: string
+          id?: string
+          ip_address?: unknown
+          successful?: boolean
+        }
+        Update: {
+          attempted_at?: string
+          email?: string
+          id?: string
+          ip_address?: unknown
+          successful?: boolean
+        }
+        Relationships: []
+      }
       mobile_plans: {
         Row: {
           active: boolean | null
@@ -390,14 +414,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      hash_password: {
-        Args: { password_text: string }
-        Returns: string
+      check_login_rate_limit: {
+        Args: { check_email: string; check_ip: unknown }
+        Returns: {
+          attempts_count: number
+          is_limited: boolean
+          lockout_until: string
+        }[]
       }
-      is_admin_user: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
+      is_admin_user: { Args: never; Returns: boolean }
+      log_login_attempt: {
+        Args: {
+          attempt_email: string
+          attempt_ip: unknown
+          was_successful: boolean
+        }
+        Returns: undefined
       }
+      set_session_token: { Args: { token: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never

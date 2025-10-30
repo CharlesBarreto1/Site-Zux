@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, FileText, Globe, LogOut, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { AdminSessionValidator } from '@/lib/adminSessionValidator';
 
 const AdminDashboard = () => {
   const [adminUser, setAdminUser] = useState<any>(null);
@@ -11,16 +12,21 @@ const AdminDashboard = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    const storedAdmin = localStorage.getItem('admin_user');
-    if (!storedAdmin) {
-      navigate('/admin/login');
-      return;
-    }
-    setAdminUser(JSON.parse(storedAdmin));
+    const checkSession = async () => {
+      const isValid = await AdminSessionValidator.isValidSession();
+      if (!isValid) {
+        navigate('/admin/login');
+        return;
+      }
+      const user = AdminSessionValidator.getCurrentUser();
+      setAdminUser(user);
+    };
+    
+    checkSession();
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('admin_user');
+    AdminSessionValidator.clearSession();
     toast({
       title: "Logout realizado",
       description: "Até mais!",

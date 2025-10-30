@@ -4,6 +4,29 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { z } from 'zod';
+
+// Schema de validação
+const contactSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(2, 'Nome deve ter pelo menos 2 caracteres')
+    .max(100, 'Nome muito longo'),
+  email: z.string()
+    .trim()
+    .email('Email inválido')
+    .max(255, 'Email muito longo'),
+  phone: z.string()
+    .trim()
+    .regex(/^[\d\s()-]+$/, 'Telefone inválido')
+    .min(10, 'Telefone inválido')
+    .max(20, 'Telefone muito longo'),
+  city: z.string()
+    .min(1, 'Selecione uma cidade'),
+  message: z.string()
+    .max(1000, 'Mensagem muito longa')
+    .optional()
+});
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -32,16 +55,19 @@ const ContactSection = () => {
     e.preventDefault();
     
     try {
+      // Validar dados do formulário
+      const validatedData = contactSchema.parse(formData);
+      
       // Salvar no Supabase
       const { error } = await supabase
         .from('leads')
         .insert([
           {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            city: formData.city,
-            message: formData.message,
+            name: validatedData.name,
+            email: validatedData.email,
+            phone: validatedData.phone,
+            city: validatedData.city,
+            message: validatedData.message || '',
             plan_type: 'fibra',
             source: 'formulario_contato'
           }
@@ -49,19 +75,20 @@ const ContactSection = () => {
 
       if (error) {
         console.error('Erro ao salvar lead:', error);
+        throw new Error('Erro ao salvar dados');
       }
 
       // Create WhatsApp message
       const message = `Olá! Gostaria de mais informações sobre os planos da Zux Internet.
 
 *Dados de Contato:*
-Nome: ${formData.name}
-Email: ${formData.email}
-Telefone: ${formData.phone}
-Cidade: ${formData.city}
+Nome: ${validatedData.name}
+Email: ${validatedData.email}
+Telefone: ${validatedData.phone}
+Cidade: ${validatedData.city}
 
 *Mensagem:*
-${formData.message}`;
+${validatedData.message || 'Não informada'}`;
 
       const whatsappUrl = `https://wa.me/554431102530?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
@@ -80,12 +107,22 @@ ${formData.message}`;
         message: ''
       });
     } catch (error) {
-      console.error('Erro no envio:', error);
-      toast({
-        title: "Erro",
-        description: "Houve um problema no envio. Tente novamente.",
-        variant: "destructive",
-      });
+      if (error instanceof z.ZodError) {
+        // Mostrar erros de validação
+        const firstError = error.errors[0];
+        toast({
+          title: "Erro de validação",
+          description: firstError.message,
+          variant: "destructive",
+        });
+      } else {
+        console.error('Erro no envio:', error);
+        toast({
+          title: "Erro",
+          description: "Houve um problema no envio. Tente novamente.",
+          variant: "destructive",
+        });
+      }
     }
   };
 

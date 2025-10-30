@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Save, Globe, Image } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { AdminSessionValidator } from '@/lib/adminSessionValidator';
 
 interface SiteContent {
   id: string;
@@ -63,12 +64,15 @@ const AdminContent = () => {
   };
 
   useEffect(() => {
-    const adminUser = localStorage.getItem('admin_user');
-    if (!adminUser) {
-      navigate('/admin/login');
-      return;
-    }
-    fetchContent();
+    const checkAuth = async () => {
+      const isValid = await AdminSessionValidator.isValidSession();
+      if (!isValid) {
+        navigate('/admin/login');
+        return;
+      }
+      fetchContent();
+    };
+    checkAuth();
   }, [navigate]);
 
   const fetchContent = async () => {

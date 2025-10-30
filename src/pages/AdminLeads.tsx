@@ -24,6 +24,7 @@ import {
   MapPin
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { AdminSessionValidator } from '@/lib/adminSessionValidator';
 
 interface Lead {
   id: string;
@@ -65,11 +66,14 @@ const AdminLeads = () => {
 
   // Check admin authentication
   useEffect(() => {
-    const adminUser = localStorage.getItem('admin_user');
-    if (!adminUser) {
-      navigate('/admin/login');
-      return;
-    }
+    const checkAuth = async () => {
+      const isValid = await AdminSessionValidator.isValidSession();
+      if (!isValid) {
+        navigate('/admin/login');
+        return;
+      }
+    };
+    checkAuth();
   }, [navigate]);
 
   useEffect(() => {
@@ -78,7 +82,10 @@ const AdminLeads = () => {
 
   const fetchLeads = async () => {
     try {
-      const { data, error } = await supabase
+      // Get authenticated client with session token
+      const client = await AdminSessionValidator.getAuthenticatedClient();
+      
+      const { data, error } = await client
         .from('leads')
         .select('*')
         .order('created_at', { ascending: false });
@@ -89,7 +96,7 @@ const AdminLeads = () => {
       console.error('Erro ao buscar leads:', error);
       toast({
         title: "Erro",
-        description: "Não foi possível carregar os leads.",
+        description: "Não foi possível carregar os leads. Verifique se você está autenticado.",
         variant: "destructive",
       });
     } finally {

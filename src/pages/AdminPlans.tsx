@@ -10,6 +10,7 @@ import { Switch } from '@/components/ui/switch';
 import { ArrowLeft, Plus, Edit, Trash2, Wifi, Smartphone } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { AdminSessionValidator } from '@/lib/adminSessionValidator';
 
 interface Plan {
   id: string;
@@ -45,12 +46,15 @@ const AdminPlans = () => {
   });
 
   useEffect(() => {
-    const adminUser = localStorage.getItem('admin_user');
-    if (!adminUser) {
-      navigate('/admin/login');
-      return;
-    }
-    fetchPlans();
+    const checkAuth = async () => {
+      const isValid = await AdminSessionValidator.isValidSession();
+      if (!isValid) {
+        navigate('/admin/login');
+        return;
+      }
+      fetchPlans();
+    };
+    checkAuth();
   }, [navigate]);
 
   const fetchPlans = async () => {
