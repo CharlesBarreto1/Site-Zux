@@ -48,7 +48,8 @@ const AdminUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const { data, error } = await supabase
+      const client = await AdminSessionValidator.getAuthenticatedClient();
+      const { data, error } = await client
         .from('admin_users')
         .select('id, email, name, active, created_at')
         .order('created_at', { ascending: false });
@@ -102,12 +103,18 @@ const AdminUsers = () => {
           active: formData.active
         };
 
-        // Only update password if provided
+        // Only update password if provided - hash using edge function
         if (formData.password) {
-          updateData.password_hash = formData.password; // Will be hashed by database trigger
+          const { data: hashData, error: hashError } = await supabase.functions.invoke('hash-password', {
+            body: { password: formData.password }
+          });
+
+          if (hashError) throw new Error('Erro ao processar senha: ' + hashError.message);
+          updateData.bcrypt_password_hash = hashData.hash;
         }
 
-        const { error } = await supabase
+        const client = await AdminSessionValidator.getAuthenticatedClient();
+        const { error } = await client
           .from('admin_users')
           .update(updateData)
           .eq('id', editingUser.id);
@@ -125,14 +132,23 @@ const AdminUsers = () => {
           return;
         }
 
-        const { error } = await supabase
+        // Hash password using edge function
+        const { data: hashData, error: hashError } = await supabase.functions.invoke('hash-password', {
+          body: { password: formData.password }
+        });
+
+        if (hashError) throw new Error('Erro ao processar senha: ' + hashError.message);
+
+        const client = await AdminSessionValidator.getAuthenticatedClient();
+        const { error } = await client
           .from('admin_users')
-          .insert({
+          .insert([{
             email: formData.email,
             name: formData.name,
-            password_hash: formData.password, // Will be hashed by database trigger
+            password_hash: 'DEPRECATED',
+            bcrypt_password_hash: hashData.hash,
             active: formData.active
-          });
+          }]);
         
         if (error) throw error;
         toast({ title: "Sucesso", description: "Usuário criado com sucesso!" });
@@ -144,7 +160,7 @@ const AdminUsers = () => {
       console.error('Error saving user:', error);
       toast({
         title: "Erro",
-        description: "Não foi possível salvar o usuário.",
+        description: error instanceof Error ? error.message : "Não foi possível salvar o usuário.",
         variant: "destructive",
       });
     } finally {
@@ -156,7 +172,8 @@ const AdminUsers = () => {
     if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
 
     try {
-      const { error } = await supabase
+      const client = await AdminSessionValidator.getAuthenticatedClient();
+      const { error } = await client
         .from('admin_users')
         .delete()
         .eq('id', userId);

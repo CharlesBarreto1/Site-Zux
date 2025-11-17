@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { MessageCircle, Check, ArrowLeft } from 'lucide-react';
+import { z } from 'zod';
 
 interface Plan {
   id: string;
@@ -35,6 +36,24 @@ interface City {
   name: string;
   state: string;
 }
+
+const signupSchema = z.object({
+  fullName: z.string().trim().min(3, 'Nome completo deve ter pelo menos 3 caracteres').max(100, 'Nome muito longo'),
+  cpf: z.string().trim().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/, 'CPF inválido'),
+  birthDate: z.string().min(1, 'Data de nascimento obrigatória'),
+  phone: z.string().trim().min(10, 'Telefone inválido').max(15, 'Telefone inválido'),
+  secondPhone: z.string().trim().max(15, 'Telefone inválido').optional(),
+  email: z.string().trim().email('E-mail inválido').max(255, 'E-mail muito longo'),
+  streetName: z.string().trim().min(3, 'Nome da rua obrigatório').max(200, 'Nome da rua muito longo'),
+  zipCode: z.string().trim().regex(/^\d{5}-?\d{3}$/, 'CEP inválido'),
+  addressNumber: z.string().trim().min(1, 'Número obrigatório').max(10, 'Número inválido'),
+  referencePoint: z.string().trim().max(200, 'Ponto de referência muito longo').optional(),
+  selectedCity: z.string().min(1, 'Cidade obrigatória'),
+  invoiceDueDay: z.string().min(1, 'Dia de vencimento obrigatório'),
+  preferredInstallationPeriod: z.string().min(1, 'Período de instalação obrigatório'),
+  observations: z.string().trim().max(500, 'Observações muito longas').optional(),
+  lgpdConsent: z.boolean().refine(val => val === true, 'É necessário aceitar os termos da LGPD')
+});
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -122,18 +141,12 @@ const Signup = () => {
   };
 
   const handleSubmit = async () => {
-    if (!formData.lgpdConsent) {
-      toast({
-        title: "Erro",
-        description: "É necessário aceitar os termos da LGPD",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setLoading(true);
 
     try {
+      // Validar dados do formulário
+      const validatedData = signupSchema.parse(formData);
+
       const selectedPlanData = planType === 'internet' 
         ? plans.find(p => p.id === selectedPlan)
         : mobilePlans.find(p => p.id === selectedPlan);
@@ -174,11 +187,21 @@ const Signup = () => {
       });
     } catch (error) {
       console.error('Error submitting form:', error);
-      toast({
-        title: "Erro",
-        description: "Erro ao enviar os dados. Tente novamente.",
-        variant: "destructive",
-      });
+      
+      if (error instanceof z.ZodError) {
+        const firstError = error.errors[0];
+        toast({
+          title: "Dados inválidos",
+          description: firstError.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro",
+          description: "Erro ao enviar os dados. Tente novamente.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
