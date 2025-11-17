@@ -77,7 +77,8 @@ const AdminContent = () => {
 
   const fetchContent = async () => {
     try {
-      const { data, error } = await supabase
+      const client = await AdminSessionValidator.getAuthenticatedClient();
+      const { data, error } = await client
         .from('site_content')
         .select('*')
         .order('section');

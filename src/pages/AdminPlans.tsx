@@ -59,9 +59,10 @@ const AdminPlans = () => {
 
   const fetchPlans = async () => {
     try {
+      const client = await AdminSessionValidator.getAuthenticatedClient();
       const [internetResult, mobileResult] = await Promise.all([
-        supabase.from('internet_plans').select('*').order('price'),
-        supabase.from('mobile_plans').select('*').order('price')
+        client.from('internet_plans').select('*').order('price'),
+        client.from('mobile_plans').select('*').order('price')
       ]);
 
       if (internetResult.error) throw internetResult.error;
@@ -135,9 +136,10 @@ const AdminPlans = () => {
       };
 
       const table = planType === 'internet' ? 'internet_plans' : 'mobile_plans';
+      const client = await AdminSessionValidator.getAuthenticatedClient();
 
       if (editingPlan) {
-        const { error } = await supabase
+        const { error } = await client
           .from(table)
           .update(planData)
           .eq('id', editingPlan.id);
@@ -145,7 +147,7 @@ const AdminPlans = () => {
         if (error) throw error;
         toast({ title: "Sucesso", description: "Plano atualizado com sucesso!" });
       } else {
-        const { error } = await supabase
+        const { error } = await client
           .from(table)
           .insert(planData);
         
@@ -171,8 +173,9 @@ const AdminPlans = () => {
     if (!confirm('Tem certeza que deseja excluir este plano?')) return;
 
     try {
+      const client = await AdminSessionValidator.getAuthenticatedClient();
       const table = planType === 'internet' ? 'internet_plans' : 'mobile_plans';
-      const { error } = await supabase
+      const { error } = await client
         .from(table)
         .delete()
         .eq('id', planId);
