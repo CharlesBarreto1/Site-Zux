@@ -19,15 +19,15 @@ const HeroSection = () => {
           <div className="text-center lg:text-left space-y-8">
             <div className="space-y-4">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-                <span className="text-white">Conectando</span>
+                <span className="text-white">Melhor Internet</span>
                 <br />
-                <span className="text-hero">Você ao</span>
+                <span className="text-hero">Fibra Óptica em</span>
                 <br />
-                <span className="text-red-500">Extraordinário!</span>
+                <span className="text-red-500">Campo Mourão!</span>
               </h1>
               <p className="text-xl text-gray-300 max-w-2xl">
-                Internet fibra ótica de altíssima qualidade para quem não aceita menos que a perfeição. 
-                Tecnologia premium, velocidade incomparável e suporte diferenciado.
+                Internet fibra óptica de altíssima qualidade em Campo Mourão, Luiziana, Barbosa Ferraz, Corumbataí do Sul e Iretama. 
+                WiFi 5G premium até 1 Giga com instalação gratuita. Líder em velocidade e qualidade no Paraná!
               </p>
             </div>
 
@@ -38,8 +38,8 @@ const HeroSection = () => {
                   <Zap className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold">Até 1 Giga</h3>
-                  <p className="text-gray-400 text-sm">Velocidade máxima</p>
+                  <h3 className="text-white font-semibold">Internet até 1 Giga</h3>
+                  <p className="text-gray-400 text-sm">Velocidade máxima fibra</p>
                 </div>
               </div>
 
@@ -48,8 +48,8 @@ const HeroSection = () => {
                   <Wifi className="w-5 h-5 text-black" />
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold">Fibra Ótica</h3>
-                  <p className="text-gray-400 text-sm">Tecnologia avançada</p>
+                  <h3 className="text-white font-semibold">WiFi Fibra Óptica</h3>
+                  <p className="text-gray-400 text-sm">Tecnologia 5G premium</p>
                 </div>
               </div>
 

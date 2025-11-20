@@ -50,11 +50,14 @@ const CoverageSection = () => {
       <div className="container-premium">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">
-            <span className="text-red-500">Cobertura</span> Regional
+            Internet Fibra Óptica em <span className="text-red-500">Campo Mourão</span> e Região
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            A Zux Internet está presente em diversas cidades do Paraná, 
-            levando internet de alta qualidade para milhares de famílias e empresas.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-4">
+            A Zux Internet é líder em internet fibra óptica em Campo Mourão, Luiziana, Barbosa Ferraz, 
+            Corumbataí do Sul e Iretama, levando WiFi 5G de alta qualidade para milhares de famílias e empresas.
+          </p>
+          <p className="text-lg text-gray-700 font-semibold">
+            Melhor internet • Melhor WiFi • Melhor atendimento • Instalação grátis
           </p>
         </div>
 
@@ -62,7 +65,7 @@ const CoverageSection = () => {
           {/* Cities Grid */}
           <div className="space-y-8">
             <h3 className="text-2xl font-bold text-black text-center lg:text-left">
-              Cidades Atendidas
+              Cidades com Internet Fibra Óptica Zux
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -79,7 +82,7 @@ const CoverageSection = () => {
                   </div>
                   <div>
                     <span className="font-semibold text-gray-800">{city}</span>
-                    <div className="text-sm text-gray-500">Cobertura ativa</div>
+                    <div className="text-sm text-gray-500">Internet fibra óptica disponível</div>
                   </div>
                  </div>
                ))}
