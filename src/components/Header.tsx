@@ -15,8 +15,10 @@ const Header = () => {
           <div className="flex items-center space-x-3">
           <img 
             src="/lovable-uploads/8b9b1ca3-626f-4f88-bf1d-226672ebc39f.png" 
-            alt="Zux Internet" 
+            alt="Zux Internet - Melhor Internet Fibra Óptica em Campo Mourão, Luiziana e Região" 
             className="h-12 w-auto"
+            width="200"
+            height="48"
           />
           </div>
 

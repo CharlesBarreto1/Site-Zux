@@ -12,8 +12,10 @@ const Footer = () => {
           <div className="space-y-6">
             <img 
               src="/lovable-uploads/8b9b1ca3-626f-4f88-bf1d-226672ebc39f.png" 
-              alt="Zux Internet" 
+              alt="Zux Internet - Provedor de Internet Fibra Óptica em Campo Mourão e Região" 
               className="h-10 w-auto mb-4"
+              width="200"
+              height="40"
             />
             
             <p className="text-gray-400 leading-relaxed">
