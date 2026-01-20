@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { MessageCircle, Check, ArrowLeft } from 'lucide-react';
 import { z } from 'zod';
+import { getWhatsAppUrl } from '@/lib/whatsapp';
 
 interface Plan {
   id: string;
@@ -251,13 +252,18 @@ const Signup = () => {
           </div>
           <Button 
             variant="outline" 
-            onClick={() => {
-              window.open('https://wa.me/554431102530?text=Olá! Gostaria de contratar um plano da Zux Internet pelo WhatsApp.', '_blank');
-            }}
             className="flex items-center space-x-2 border-red-400 bg-red-500 text-white hover:bg-red-600 hover:border-red-500"
+            asChild
           >
-            <MessageCircle className="w-4 h-4" />
-            <span>Quero contratar pelo WhatsApp</span>
+            <a
+              href={getWhatsAppUrl('Olá! Gostaria de contratar um plano da Zux Internet pelo WhatsApp.')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-2"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>Quero contratar pelo WhatsApp</span>
+            </a>
           </Button>
         </div>
       </header>

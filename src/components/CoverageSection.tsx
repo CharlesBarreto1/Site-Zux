@@ -3,6 +3,7 @@ import { MapPin, Check, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
+import { getWhatsAppUrl } from '@/lib/whatsapp';
 
 const CoverageSection = () => {
   const [selectedCity, setSelectedCity] = useState('');
@@ -41,7 +42,7 @@ const CoverageSection = () => {
 
   const checkCoverage = () => {
     if (selectedCity) {
-      window.open(`https://wa.me/554431102530?text=Olá! Gostaria de verificar a cobertura em ${selectedCity}`, '_blank');
+      window.location.assign(getWhatsAppUrl(`Olá! Gostaria de verificar a cobertura em ${selectedCity}`));
     }
   };
 

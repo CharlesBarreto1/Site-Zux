@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
+import { getWhatsAppUrl } from '@/lib/whatsapp';
 
 // Schema de validação
 const contactSchema = z.object({
@@ -90,8 +91,10 @@ Cidade: ${validatedData.city}
 *Mensagem:*
 ${validatedData.message || 'Não informada'}`;
 
-      const whatsappUrl = `https://wa.me/554431102530?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
+      // After async work, window.open is commonly blocked by popup blockers.
+      // Use navigation for best compatibility.
+      const whatsappUrl = getWhatsAppUrl(message);
+      window.location.assign(whatsappUrl);
 
       toast({
         title: "Sucesso!",

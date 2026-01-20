@@ -1,5 +1,6 @@
 import { ArrowRight, Wifi, Zap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { getWhatsAppUrl } from '@/lib/whatsapp';
 
 const HeroSection = () => {
   return (
@@ -83,9 +84,11 @@ const HeroSection = () => {
                 size="lg" 
                 variant="outline" 
                 className="btn-outline-premium"
-                onClick={() => window.open('https://wa.me/554431102530', '_blank')}
+                asChild
               >
-                Falar no WhatsApp
+                <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer">
+                  Falar no WhatsApp
+                </a>
               </Button>
             </div>
 
