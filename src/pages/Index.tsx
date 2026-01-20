@@ -4,6 +4,7 @@ import PlansSection from '@/components/PlansSection';
 import MobilePlansSection from '@/components/MobilePlansSection';
 import AboutSection from '@/components/AboutSection';
 import CoverageSection from '@/components/CoverageSection';
+import SpeedTestSection from '@/components/SpeedTestSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
@@ -19,6 +20,7 @@ const Index = () => {
         <MobilePlansSection />
         <AboutSection />
         <CoverageSection />
+        <SpeedTestSection />
         <TestimonialsSection />
         <ContactSection />
         <LocalSEOContent />
