@@ -1,6 +1,7 @@
 import { Check, Smartphone, Globe, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { getWhatsAppUrl } from '@/lib/whatsapp';
 
 const MobilePlansSection = () => {
   const mobilePlans = [
@@ -64,8 +65,8 @@ const MobilePlansSection = () => {
 
   const handleContractPlan = (planName: string) => {
     const message = `Olá! Gostaria de contratar o plano ${planName} da Zux Internet. Podem me ajudar?`;
-    const whatsappUrl = `https://wa.me/554431102530?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    // Use navigation (not popup) for maximum compatibility.
+    window.location.assign(getWhatsAppUrl(message));
   };
 
   return (
@@ -158,11 +159,17 @@ const MobilePlansSection = () => {
             Dúvidas sobre nossos planos móveis? Entre em contato conosco!
           </p>
           <Button 
-            onClick={() => window.open('https://wa.me/554431102530?text=Olá! Gostaria de saber mais sobre os planos móveis 5G da Zux Internet.', '_blank')}
             variant="outline" 
             className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+            asChild
           >
-            Falar com Consultor
+            <a
+              href={getWhatsAppUrl('Olá! Gostaria de saber mais sobre os planos móveis 5G da Zux Internet.')}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Falar com Consultor
+            </a>
           </Button>
         </div>
       </div>

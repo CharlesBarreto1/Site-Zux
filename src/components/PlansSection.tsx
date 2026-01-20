@@ -1,6 +1,7 @@
 import { Check, Star, Crown, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getWhatsAppUrl } from '@/lib/whatsapp';
 
 const PlansSection = () => {
   const plans = [
@@ -97,9 +98,11 @@ const PlansSection = () => {
                   <Button 
                     variant="ghost" 
                     className="w-full text-gray-600 hover:text-red-500"
-                    onClick={() => window.open('https://wa.me/554431102530', '_blank')}
+                    asChild
                   >
-                    Falar com Consultor
+                    <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer">
+                      Falar com Consultor
+                    </a>
                   </Button>
                 </div>
               </CardContent>
@@ -113,7 +116,7 @@ const PlansSection = () => {
             <strong>Empresas:</strong> Temos planos corporativos personalizados. 
             <button 
               className="text-red-500 hover:text-red-600 ml-1 font-semibold"
-              onClick={() => window.open('https://wa.me/554431102530', '_blank')}
+               onClick={() => window.location.assign(getWhatsAppUrl())}
             >
               Solicite um orçamento
             </button>
