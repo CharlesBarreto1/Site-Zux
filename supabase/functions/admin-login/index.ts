@@ -15,9 +15,11 @@ serve(async (req) => {
   try {
     const { email, password } = await req.json()
     
-    // Get client IP address for rate limiting
-    const ipAddress = req.headers.get('x-forwarded-for')?.split(',')[0] || 
-                     req.headers.get('x-real-ip') || 
+    // Get client IP address using trusted headers only
+    // Prefer Cloudflare's CF-Connecting-IP, then x-real-ip from nginx
+    // Do NOT trust X-Forwarded-For as it can be spoofed
+    const ipAddress = req.headers.get('cf-connecting-ip') ||
+                     req.headers.get('x-real-ip') ||
                      'unknown'
 
     // Create Supabase client
@@ -26,9 +28,9 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    console.log(`[ADMIN LOGIN] Attempt from ${ipAddress} for ${email}`)
+    console.log(`[ADMIN LOGIN] Attempt for ${email}`)
 
-    // Check rate limiting
+    // Check rate limiting (now based on email only, cannot be bypassed via IP spoofing)
     const { data: rateLimitResult } = await supabaseClient
       .rpc('check_login_rate_limit', { 
         check_email: email,
@@ -55,6 +57,26 @@ serve(async (req) => {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         }
       )
+    }
+
+    // Implement progressive delay based on failed attempts
+    // This slows down brute-force attacks even if they're under the rate limit
+    const { data: attemptsData } = await supabaseClient
+      .from('login_attempts')
+      .select('attempted_at')
+      .eq('email', email)
+      .eq('successful', false)
+      .gte('attempted_at', new Date(Date.now() - 3600000).toISOString())
+      .order('attempted_at', { ascending: false })
+      .limit(10)
+
+    const failedAttempts = attemptsData?.length || 0
+
+    // Progressive delay: 0s, 1s, 2s, 4s, 8s, 16s, 32s (max)
+    if (failedAttempts > 0) {
+      const delayMs = Math.min(Math.pow(2, failedAttempts - 1) * 1000, 32000)
+      console.log(`[ADMIN LOGIN] Progressive delay: ${delayMs}ms for ${email} (${failedAttempts} failed attempts)`)
+      await new Promise(resolve => setTimeout(resolve, delayMs))
     }
 
     // Get admin user
@@ -142,7 +164,7 @@ serve(async (req) => {
       was_successful: true
     })
 
-    console.log(`[ADMIN LOGIN] Success: ${email} - Session: ${sessionToken}`)
+    console.log(`[ADMIN LOGIN] Success: ${email}`)
 
     return new Response(
       JSON.stringify({ 
