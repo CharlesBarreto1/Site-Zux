@@ -127,8 +127,10 @@ const AdminContent = () => {
     setSaving(true);
     
     try {
+      const client = await AdminSessionValidator.getAuthenticatedClient();
+      
       // Delete all existing content and recreate
-      await supabase.from('site_content').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await client.from('site_content').delete().neq('id', '00000000-0000-0000-0000-000000000000');
       
       // Insert all content
       const contentToInsert = content.map(({ id, ...item }) => ({
@@ -139,7 +141,7 @@ const AdminContent = () => {
       }));
 
       if (contentToInsert.length > 0) {
-        const { error } = await supabase
+        const { error } = await client
           .from('site_content')
           .insert(contentToInsert);
         

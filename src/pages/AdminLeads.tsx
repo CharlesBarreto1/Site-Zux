@@ -106,7 +106,8 @@ const AdminLeads = () => {
 
   const updateLeadStatus = async (leadId: string, newStatus: Lead['status']) => {
     try {
-      const { error } = await supabase
+      const client = await AdminSessionValidator.getAuthenticatedClient();
+      const { error } = await client
         .from('leads')
         .update({ status: newStatus })
         .eq('id', leadId);
@@ -137,7 +138,8 @@ const AdminLeads = () => {
     }
 
     try {
-      const { error } = await supabase
+      const client = await AdminSessionValidator.getAuthenticatedClient();
+      const { error } = await client
         .from('leads')
         .delete()
         .eq('id', leadId);
@@ -163,7 +165,8 @@ const AdminLeads = () => {
 
   const updateLead = async (updatedLead: Lead) => {
     try {
-      const { error } = await supabase
+      const client = await AdminSessionValidator.getAuthenticatedClient();
+      const { error } = await client
         .from('leads')
         .update({
           name: updatedLead.name,
