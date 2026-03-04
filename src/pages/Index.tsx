@@ -9,10 +9,11 @@ import TestimonialsSection from '@/components/TestimonialsSection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import LocalSEOContent from '@/components/LocalSEOContent';
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Header />
       <main>
         <HeroSection />
@@ -26,6 +27,7 @@ const Index = () => {
         <LocalSEOContent />
       </main>
       <Footer />
+      <FloatingWhatsApp />
     </div>
   );
 };

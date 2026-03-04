@@ -1,184 +1,94 @@
 import { Phone, Mail, MapPin, Instagram, Globe } from 'lucide-react';
+import { getWhatsAppUrl } from '@/lib/whatsapp';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-black text-white">
-      {/* Main Footer */}
+    <footer className="border-t border-border/50">
       <div className="container-premium py-16">
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
-          {/* Company Info */}
-          <div className="space-y-6">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-10">
+          <div className="space-y-5">
             <img 
               src="/lovable-uploads/8b9b1ca3-626f-4f88-bf1d-226672ebc39f.png" 
               alt="Zux Internet - Provedor de Internet Fibra Óptica em Campo Mourão e Região" 
-              className="h-10 w-auto mb-4"
+              className="h-9 w-auto"
               width="200"
-              height="40"
+              height="36"
             />
-            
-            <p className="text-gray-400 leading-relaxed">
-              Conectando você ao extraordinário através de internet fibra ótica de altíssima qualidade 
-              e atendimento premium.
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Conectando você ao extraordinário através de internet fibra óptica de altíssima qualidade.
             </p>
-
-            <div className="flex space-x-4">
-              <a 
-                href="https://wa.me/554431102530"
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors"
-              >
-                <Phone className="w-5 h-5 text-white" />
-              </a>
-              <a 
-                href="https://instagram.com/zuxinternet" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center hover:bg-purple-600 transition-colors"
-              >
-                <Instagram className="w-5 h-5 text-white" />
-              </a>
-              <a 
-                href="mailto:contato@zux.net.br"
-                className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-              >
-                <Mail className="w-5 h-5 text-white" />
-              </a>
-              <a 
-                href="https://www.zux.net.br" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
-              >
-                <Globe className="w-5 h-5 text-white" />
-              </a>
+            <div className="flex gap-3">
+              {[
+                { href: getWhatsAppUrl(), icon: Phone, bg: 'bg-green-600' },
+                { href: 'https://instagram.com/zuxinternet', icon: Instagram, bg: 'bg-purple-600' },
+                { href: 'mailto:contato@zux.net.br', icon: Mail, bg: 'bg-primary' },
+                { href: 'https://www.zux.net.br', icon: Globe, bg: 'bg-muted' },
+              ].map((s, i) => (
+                <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
+                  className={`w-9 h-9 ${s.bg} rounded-lg flex items-center justify-center hover:opacity-80 transition-opacity`}>
+                  <s.icon className="w-4 h-4 text-white" />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-bold text-white mb-6">Links Rápidos</h3>
+            <h3 className="font-display text-sm font-bold text-foreground mb-5 uppercase tracking-wider">Links Rápidos</h3>
             <ul className="space-y-3">
-              <li>
-                <a href="#inicio" className="text-gray-400 hover:text-red-400 transition-colors">
-                  Início
-                </a>
-              </li>
-              <li>
-                <a href="#planos" className="text-gray-400 hover:text-red-400 transition-colors">
-                  Planos
-                </a>
-              </li>
-              <li>
-                <a href="#sobre" className="text-gray-400 hover:text-red-400 transition-colors">
-                  Sobre Nós
-                </a>
-              </li>
-              <li>
-                <a href="#cobertura" className="text-gray-400 hover:text-red-400 transition-colors">
-                  Cobertura
-                </a>
-              </li>
-              <li>
-                <a href="#contato" className="text-gray-400 hover:text-red-400 transition-colors">
-                  Contato
-                </a>
-              </li>
+              {['Início', 'Planos', 'Sobre Nós', 'Cobertura', 'Contato'].map(label => (
+                <li key={label}>
+                  <a href={`#${label === 'Sobre Nós' ? 'sobre' : label === 'Início' ? 'inicio' : label.toLowerCase()}`} 
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors">{label}</a>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Services */}
           <div>
-            <h3 className="text-lg font-bold text-white mb-6">Serviços</h3>
+            <h3 className="font-display text-sm font-bold text-foreground mb-5 uppercase tracking-wider">Serviços</h3>
             <ul className="space-y-3">
-              <li>
-                <span className="text-gray-400">Internet Residencial</span>
-              </li>
-              <li>
-                <span className="text-gray-400">Internet Empresarial</span>
-              </li>
-              <li>
-                <span className="text-gray-400">Suporte Técnico</span>
-              </li>
-              <li>
-                <span className="text-gray-400">Instalação Gratuita</span>
-              </li>
-              <li>
-                <span className="text-gray-400">Wi-Fi Premium</span>
-              </li>
+              {['Internet Residencial', 'Internet Empresarial', 'Suporte Técnico', 'Instalação Gratuita', 'Wi-Fi Premium'].map(s => (
+                <li key={s}><span className="text-sm text-muted-foreground">{s}</span></li>
+              ))}
             </ul>
           </div>
 
-          {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-bold text-white mb-6">Contato</h3>
+            <h3 className="font-display text-sm font-bold text-foreground mb-5 uppercase tracking-wider">Contato</h3>
             <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 text-red-400 flex-shrink-0 mt-1" />
-                <div className="text-gray-400 text-sm">
-                  Avenida Liberdade 1141, Centro
-                  <br />
-                  Luiziana - PR, CEP: 87290-000
-                </div>
+              <div className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-muted-foreground">Avenida Liberdade 1141, Centro<br/>Luiziana - PR, 87290-000</span>
               </div>
-              
-              <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-red-400" />
-                <a 
-                  href="https://wa.me/554431102530" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  (44) 3110-2530
-                </a>
+              <div className="flex items-center gap-3">
+                <Phone className="w-4 h-4 text-primary" />
+                <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">(44) 92004-9139</a>
               </div>
-              
-              <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-red-400" />
-                <a 
-                  href="mailto:contato@zux.net.br"
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  contato@zux.net.br
-                </a>
+              <div className="flex items-center gap-3">
+                <Mail className="w-4 h-4 text-primary" />
+                <a href="mailto:contato@zux.net.br" className="text-sm text-muted-foreground hover:text-foreground transition-colors">contato@zux.net.br</a>
               </div>
-            </div>
-
-            <div className="mt-6 bg-white/5 backdrop-blur-sm rounded-lg p-4">
-              <h4 className="text-white font-semibold mb-2">Atendimento</h4>
-              <p className="text-gray-400 text-sm">
-                Segunda a Sexta: 8h às 18h
-                <br />
-                Sábado: 8h às 12h
-                <br />
-                <span className="text-green-400 font-semibold">Suporte 24h</span>
-              </p>
+              <div className="glass-card !p-4 mt-4">
+                <h4 className="text-xs font-bold text-foreground mb-1">Atendimento</h4>
+                <p className="text-xs text-muted-foreground">
+                  Seg-Sex: 8h–18h | Sáb: 8h–12h<br/>
+                  <span className="text-primary font-medium">Suporte 24h</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Footer */}
-      <div className="border-t border-gray-800">
+      <div className="border-t border-border/30">
         <div className="container-premium py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-gray-400 text-sm">
-              © {currentYear} Zux Internet. Todos os direitos reservados.
-            </div>
-            
-            <div className="flex items-center space-x-6 text-sm">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                Política de Privacidade
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                Termos de Uso
-              </a>
-              <span className="text-gray-600">
-                Desenvolvido com ❤️ para conectar você ao extraordinário
-              </span>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <span className="text-xs text-muted-foreground">© {currentYear} Zux Internet. Todos os direitos reservados.</span>
+            <div className="flex items-center gap-6 text-xs">
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Política de Privacidade</a>
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Termos de Uso</a>
             </div>
           </div>
         </div>

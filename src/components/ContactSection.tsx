@@ -1,43 +1,22 @@
 import { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, Instagram, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
 
-// Schema de validação
 const contactSchema = z.object({
-  name: z.string()
-    .trim()
-    .min(2, 'Nome deve ter pelo menos 2 caracteres')
-    .max(100, 'Nome muito longo'),
-  email: z.string()
-    .trim()
-    .email('Email inválido')
-    .max(255, 'Email muito longo'),
-  phone: z.string()
-    .trim()
-    .regex(/^[\d\s()-]+$/, 'Telefone inválido')
-    .min(10, 'Telefone inválido')
-    .max(20, 'Telefone muito longo'),
-  city: z.string()
-    .min(1, 'Selecione uma cidade'),
-  message: z.string()
-    .max(1000, 'Mensagem muito longa')
-    .optional()
+  name: z.string().trim().min(2, 'Nome deve ter pelo menos 2 caracteres').max(100),
+  email: z.string().trim().email('Email inválido').max(255),
+  phone: z.string().trim().regex(/^[\d\s()-]+$/, 'Telefone inválido').min(10).max(20),
+  city: z.string().min(1, 'Selecione uma cidade'),
+  message: z.string().max(1000).optional()
 });
 
 const ContactSection = () => {
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    city: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', city: '', message: '' });
 
   const cities = [
     'Maringá-PR', 'Paiçandu-PR', 'Astorga-PR', 'Jandaia do Sul-PR',
@@ -46,296 +25,129 @@ const ContactSection = () => {
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
-      // Validar dados do formulário
-      const validatedData = contactSchema.parse(formData);
+      const v = contactSchema.parse(formData);
       
-      // Salvar no Supabase
-      const { error } = await supabase
-        .from('leads')
-        .insert([
-          {
-            name: validatedData.name,
-            email: validatedData.email,
-            phone: validatedData.phone,
-            city: validatedData.city,
-            message: validatedData.message || '',
-            plan_type: 'fibra',
-            source: 'formulario_contato'
-          }
-        ]);
+      const { error } = await supabase.from('leads').insert([{
+        name: v.name, email: v.email, phone: v.phone, city: v.city,
+        message: v.message || '', plan_type: 'fibra', source: 'formulario_contato'
+      }]);
 
-      if (error) {
-        console.error('Erro ao salvar lead:', error);
-        throw new Error('Erro ao salvar dados');
-      }
+      if (error) throw new Error('Erro ao salvar dados');
 
-      // Create WhatsApp message
-      const message = `Olá! Gostaria de mais informações sobre os planos da Zux Internet.
+      const message = `Olá! Gostaria de mais informações sobre os planos da Zux Internet.\n\n*Dados de Contato:*\nNome: ${v.name}\nEmail: ${v.email}\nTelefone: ${v.phone}\nCidade: ${v.city}\n\n*Mensagem:*\n${v.message || 'Não informada'}`;
+      window.location.assign(getWhatsAppUrl(message));
 
-*Dados de Contato:*
-Nome: ${validatedData.name}
-Email: ${validatedData.email}
-Telefone: ${validatedData.phone}
-Cidade: ${validatedData.city}
-
-*Mensagem:*
-${validatedData.message || 'Não informada'}`;
-
-      // After async work, window.open is commonly blocked by popup blockers.
-      // Use navigation for best compatibility.
-      const whatsappUrl = getWhatsAppUrl(message);
-      window.location.assign(whatsappUrl);
-
-      toast({
-        title: "Sucesso!",
-        description: "Seus dados foram enviados e você será redirecionado para nosso WhatsApp.",
-      });
-
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        city: '',
-        message: ''
-      });
+      toast({ title: "Sucesso!", description: "Redirecionando para nosso WhatsApp." });
+      setFormData({ name: '', email: '', phone: '', city: '', message: '' });
     } catch (error) {
       if (error instanceof z.ZodError) {
-        // Mostrar erros de validação
-        const firstError = error.errors[0];
-        toast({
-          title: "Erro de validação",
-          description: firstError.message,
-          variant: "destructive",
-        });
+        toast({ title: "Erro de validação", description: error.errors[0].message, variant: "destructive" });
       } else {
-        console.error('Erro no envio:', error);
-        toast({
-          title: "Erro",
-          description: "Houve um problema no envio. Tente novamente.",
-          variant: "destructive",
-        });
+        toast({ title: "Erro", description: "Houve um problema no envio. Tente novamente.", variant: "destructive" });
       }
     }
   };
 
+  const inputClass = "w-full p-3 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm";
+
+  const contactInfo = [
+    { icon: Phone, color: 'bg-primary', title: 'Telefone', content: <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">(44) 92004-9139</a>, sub: 'WhatsApp disponível 24h' },
+    { icon: Mail, color: 'bg-secondary', title: 'E-mail', content: <a href="mailto:contato@zux.net.br" className="text-primary hover:underline font-medium">contato@zux.net.br</a>, sub: 'Resposta em até 24h' },
+    { icon: MapPin, color: 'bg-primary', title: 'Endereço', content: <span className="text-muted-foreground text-sm">Avenida Liberdade 1141, Centro<br/>Luiziana - PR, 87290-000</span>, sub: '' },
+    { icon: Clock, color: 'bg-primary', title: 'Atendimento', content: <span className="text-muted-foreground text-sm">Seg-Sex: 8h–18h | Sáb: 8h–12h</span>, sub: 'Suporte técnico 24h' },
+  ];
+
   return (
-    <section id="contato" className="section-premium bg-gradient-to-br from-gray-50 to-white">
+    <section id="contato" className="section-premium relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0"><div className="glow-line" /></div>
+
       <div className="container-premium">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">
-            Entre em <span className="text-red-500">Contato</span>
+        <div className="text-center mb-16 space-y-4">
+          <span className="text-sm font-medium text-primary uppercase tracking-widest">Contato</span>
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground">
+            Entre em <span className="text-gradient">Contato</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Estamos prontos para atender você com excelência. 
-            Entre em contato conosco e descubra como podemos conectar você ao extraordinário.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Estamos prontos para conectar você ao extraordinário.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <Card className="card-premium">
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-black flex items-center space-x-3">
-                <Send className="w-8 h-8 text-red-500" />
-                <span>Fale Conosco</span>
-              </CardTitle>
-              <p className="text-gray-600">
-                Preencha o formulário e entraremos em contato rapidamente
-              </p>
-            </CardHeader>
+          <div className="card-premium space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--gradient-primary)' }}>
+                <Send className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <h3 className="font-display text-lg font-bold text-foreground">Fale Conosco</h3>
+                <p className="text-xs text-muted-foreground">Preencha e será redirecionado ao WhatsApp</p>
+              </div>
+            </div>
             
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Nome Completo *
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                      placeholder="Seu nome completo"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      E-mail *
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                      placeholder="seu@email.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Telefone *
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                      placeholder="(44) 99999-9999"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Cidade *
-                    </label>
-                    <select
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                    >
-                      <option value="">Selecione sua cidade</option>
-                      {cities.map((city, index) => (
-                        <option key={index} value={city}>{city}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Mensagem
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={4}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors resize-none"
-                    placeholder="Como podemos ajudar você? (opcional)"
-                  />
-                </div>
-
-                <Button type="submit" className="w-full btn-premium" size="lg">
-                  Enviar via WhatsApp
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-
-          {/* Contact Info */}
-          <div className="space-y-8">
-            <h3 className="text-2xl font-bold text-black">
-              Informações de <span className="text-red-500">Contato</span>
-            </h3>
-
-            <div className="grid gap-6">
-              {/* Phone */}
-              <div className="flex items-start space-x-4 bg-white p-6 rounded-xl shadow-lg">
-                <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
-                  <Phone className="w-6 h-6 text-white" />
+                  <label className="block text-xs font-medium text-foreground mb-1.5">Nome *</label>
+                  <input type="text" name="name" value={formData.name} onChange={handleInputChange} required className={inputClass} placeholder="Seu nome" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-black mb-1">Telefone</h4>
-                  <a 
-                    href="https://wa.me/554431102530" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-red-500 hover:text-red-600 font-semibold"
-                  >
-                    (44) 3110-2530
-                  </a>
-                  <p className="text-gray-600 text-sm">WhatsApp disponível 24h</p>
+                  <label className="block text-xs font-medium text-foreground mb-1.5">E-mail *</label>
+                  <input type="email" name="email" value={formData.email} onChange={handleInputChange} required className={inputClass} placeholder="seu@email.com" />
                 </div>
               </div>
-
-              {/* Email */}
-              <div className="flex items-start space-x-4 bg-white p-6 rounded-xl shadow-lg">
-                <div className="w-12 h-12 bg-yellow-400 rounded-lg flex items-center justify-center">
-                  <Mail className="w-6 h-6 text-black" />
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-foreground mb-1.5">Telefone *</label>
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required className={inputClass} placeholder="(44) 99999-9999" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-black mb-1">E-mail</h4>
-                  <a 
-                    href="mailto:contato@zux.net.br"
-                    className="text-red-500 hover:text-red-600 font-semibold"
-                  >
-                    contato@zux.net.br
-                  </a>
-                  <p className="text-gray-600 text-sm">Resposta em até 24h</p>
+                  <label className="block text-xs font-medium text-foreground mb-1.5">Cidade *</label>
+                  <select name="city" value={formData.city} onChange={handleInputChange} required className={inputClass}>
+                    <option value="">Selecione</option>
+                    {cities.map((city) => <option key={city} value={city}>{city}</option>)}
+                  </select>
                 </div>
               </div>
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1.5">Mensagem</label>
+                <textarea name="message" value={formData.message} onChange={handleInputChange} rows={3} className={`${inputClass} resize-none`} placeholder="Como podemos ajudar? (opcional)" />
+              </div>
+              <Button type="submit" className="w-full btn-premium" size="lg">
+                Enviar via WhatsApp
+              </Button>
+            </form>
+          </div>
 
-              {/* Address */}
-              <div className="flex items-start space-x-4 bg-white p-6 rounded-xl shadow-lg">
-                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-white" />
+          <div className="space-y-4">
+            {contactInfo.map((item, i) => (
+              <div key={i} className="glass-card !p-5 flex items-start gap-4">
+                <div className={`w-10 h-10 ${item.color} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                  <item.icon className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-black mb-1">Endereço</h4>
-                  <p className="text-gray-700">
-                    Avenida Liberdade 1141, Centro
-                    <br />
-                    Luiziana - PR, CEP: 87290-000
-                  </p>
+                  <h4 className="font-display text-sm font-bold text-foreground mb-1">{item.title}</h4>
+                  {item.content}
+                  {item.sub && <p className="text-xs text-primary mt-1 font-medium">{item.sub}</p>}
                 </div>
               </div>
+            ))}
 
-              {/* Hours */}
-              <div className="flex items-start space-x-4 bg-white p-6 rounded-xl shadow-lg">
-                <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-black mb-1">Horário de Atendimento</h4>
-                  <p className="text-gray-700">
-                    Segunda a Sexta: 8h às 18h
-                    <br />
-                    Sábado: 8h às 12h
-                  </p>
-                  <p className="text-green-600 text-sm font-semibold">Suporte técnico 24h</p>
-                </div>
+            <div className="glass-card !p-5 flex items-start gap-4">
+              <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Instagram className="w-5 h-5 text-white" />
               </div>
-
-              {/* Social */}
-              <div className="flex items-start space-x-4 bg-white p-6 rounded-xl shadow-lg">
-                <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-                  <Instagram className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-black mb-1">Redes Sociais</h4>
-                  <a 
-                    href="https://instagram.com/zuxinternet" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-red-500 hover:text-red-600 font-semibold"
-                  >
-                    @zuxinternet
-                  </a>
-                  <p className="text-gray-600 text-sm">Siga para novidades</p>
-                </div>
+              <div>
+                <h4 className="font-display text-sm font-bold text-foreground mb-1">Instagram</h4>
+                <a href="https://instagram.com/zuxinternet" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium text-sm">
+                  @zuxinternet
+                </a>
+                <p className="text-xs text-muted-foreground mt-1">Siga para novidades</p>
               </div>
             </div>
           </div>

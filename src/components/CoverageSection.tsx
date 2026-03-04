@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { MapPin, Check, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
 
@@ -19,26 +18,16 @@ const CoverageSection = () => {
           .eq('active', true)
           .order('name');
 
-        if (error) {
-          console.error('Error fetching cities:', error);
-          return;
-        }
-
-        const formattedCities = data.map(city => `${city.name} - ${city.state}`);
-        setCities(formattedCities);
+        if (error) { console.error('Error fetching cities:', error); return; }
+        setCities(data.map(city => `${city.name} - ${city.state}`));
       } catch (error) {
         console.error('Error fetching cities:', error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchCities();
   }, []);
-
-  const handleCitySelect = (city: string) => {
-    setSelectedCity(city);
-  };
 
   const checkCoverage = () => {
     if (selectedCity) {
@@ -47,143 +36,119 @@ const CoverageSection = () => {
   };
 
   return (
-    <section id="cobertura" className="section-premium bg-gradient-to-br from-gray-50 to-white">
+    <section id="cobertura" className="section-premium relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0"><div className="glow-line" /></div>
+
       <div className="container-premium">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">
-            Internet Fibra Óptica em <span className="text-red-500">Campo Mourão</span> e Região
+        <div className="text-center mb-16 space-y-4">
+          <span className="text-sm font-medium text-primary uppercase tracking-widest">Cobertura</span>
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground">
+            Internet Fibra Óptica em <span className="text-gradient">Campo Mourão</span> e Região
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-4">
-            A Zux Internet é líder em internet fibra óptica em Campo Mourão, Luiziana, Barbosa Ferraz, 
-            Corumbataí do Sul e Iretama, levando WiFi 5G de alta qualidade para milhares de famílias e empresas.
-          </p>
-          <p className="text-lg text-gray-700 font-semibold">
-            Melhor internet • Melhor WiFi • Melhor atendimento • Instalação grátis
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Líder em internet fibra óptica em Campo Mourão, Luiziana, Barbosa Ferraz, 
+            Corumbataí do Sul e Iretama.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Cities Grid */}
-          <div className="space-y-8">
-            <h3 className="text-2xl font-bold text-black text-center lg:text-left">
-              Cidades com Internet Fibra Óptica Zux
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <div className="space-y-6">
+            <h3 className="font-display text-xl font-bold text-foreground">
+              Cidades Atendidas
             </h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {loading ? (
-                <div className="col-span-2 text-center text-gray-500">Carregando cidades...</div>
+                <div className="col-span-2 text-center text-muted-foreground py-8">Carregando cidades...</div>
               ) : cities.map((city, index) => (
-                <div 
+                <button
                   key={index}
-                  className="flex items-center space-x-3 bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-red-500/20"
-                  onClick={() => handleCitySelect(city)}
+                  className={`glass-card !p-4 flex items-center gap-3 text-left transition-all cursor-pointer ${
+                    selectedCity === city ? 'ring-1 ring-primary border-primary/50' : ''
+                  }`}
+                  onClick={() => setSelectedCity(city)}
                 >
-                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                    <Check className="w-4 h-4 text-white" />
+                  <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Check className="w-3.5 h-3.5 text-primary" />
                   </div>
                   <div>
-                    <span className="font-semibold text-gray-800">{city}</span>
-                    <div className="text-sm text-gray-500">Internet fibra óptica disponível</div>
+                    <span className="text-sm font-medium text-foreground">{city}</span>
+                    <div className="text-xs text-muted-foreground">Fibra óptica disponível</div>
                   </div>
-                 </div>
-               ))}
+                </button>
+              ))}
             </div>
 
-            <div className="bg-gradient-to-r from-red-500/10 to-yellow-400/10 p-6 rounded-xl border border-red-500/20">
-              <div className="flex items-start space-x-3">
-                <MapPin className="w-6 h-6 text-red-500 flex-shrink-0 mt-1" />
+            <div className="glass-card !p-5 border-l-2 border-l-primary">
+              <div className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-bold text-black mb-2">Expansão Contínua</h4>
-                  <p className="text-gray-600">
-                    Estamos constantemente expandindo nossa cobertura. 
-                    Se sua cidade não está na lista, entre em contato conosco para saber sobre futuros planos de expansão.
+                  <h4 className="font-display text-sm font-bold text-foreground mb-1">Expansão Contínua</h4>
+                  <p className="text-xs text-muted-foreground">
+                    Estamos constantemente expandindo nossa cobertura. Entre em contato para saber sobre futuros planos.
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Coverage Checker */}
-          <Card className="card-premium">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold text-black flex items-center justify-center space-x-3">
-                <Search className="w-8 h-8 text-red-500" />
-                <span>Verificar Cobertura</span>
-              </CardTitle>
-              <p className="text-gray-600">
-                Selecione sua cidade para verificar a disponibilidade em seu endereço
-              </p>
-            </CardHeader>
+          <div className="card-premium space-y-6">
+            <div className="text-center space-y-2">
+              <div className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center" style={{ background: 'var(--gradient-primary)' }}>
+                <Search className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <h3 className="font-display text-xl font-bold text-foreground">Verificar Cobertura</h3>
+              <p className="text-sm text-muted-foreground">Selecione sua cidade para verificar disponibilidade</p>
+            </div>
             
-            <CardContent className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Selecione sua cidade:
-                </label>
-                <select 
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                  value={selectedCity}
-                  onChange={(e) => setSelectedCity(e.target.value)}
-                  disabled={loading}
-                >
-                  <option value="">{loading ? "Carregando..." : "Escolha uma cidade..."}</option>
-                  {cities.map((city, index) => (
-                    <option key={index} value={city}>{city}</option>
-                  ))}
-                </select>
-              </div>
-
-              {selectedCity && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <div className="flex items-center space-x-3">
-                    <Check className="w-6 h-6 text-green-500" />
-                    <div>
-                      <h4 className="font-semibold text-green-800">Cidade Atendida!</h4>
-                      <p className="text-green-600 text-sm">
-                        {selectedCity} possui cobertura da Zux Internet
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <Button 
-                className="w-full btn-premium"
-                size="lg"
-                onClick={checkCoverage}
-                disabled={!selectedCity}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Sua cidade:</label>
+              <select 
+                className="w-full p-3 rounded-xl bg-muted border border-border text-foreground focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                disabled={loading}
               >
-                Verificar Disponibilidade no Endereço
-              </Button>
+                <option value="">{loading ? "Carregando..." : "Escolha uma cidade..."}</option>
+                {cities.map((city, index) => (
+                  <option key={index} value={city}>{city}</option>
+                ))}
+              </select>
+            </div>
 
-              <div className="text-center text-sm text-gray-500">
-                <p>
-                  Ou entre em contato diretamente:
-                  <br />
-                  <strong>(44) 3110-2530</strong>
-                </p>
+            {selectedCity && (
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/20">
+                <Check className="w-5 h-5 text-primary" />
+                <div>
+                  <span className="text-sm font-semibold text-foreground">Cidade Atendida!</span>
+                  <p className="text-xs text-muted-foreground">{selectedCity} possui cobertura Zux</p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            )}
+
+            <Button className="w-full btn-premium" size="lg" onClick={checkCoverage} disabled={!selectedCity}>
+              Verificar Disponibilidade
+            </Button>
+
+            <p className="text-center text-xs text-muted-foreground">
+              Ou entre em contato: <strong className="text-foreground">(44) 92004-9139</strong>
+            </p>
+          </div>
         </div>
 
-        {/* Additional Info */}
-        <div className="mt-16 bg-black rounded-2xl p-8 text-white">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
+        <div className="mt-16 glass-card">
+          <div className="grid grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-3xl font-bold text-red-500 mb-2">100%</div>
-              <div className="text-gray-300">Fibra Ótica</div>
-              <div className="text-sm text-gray-400 mt-1">Tecnologia pura</div>
+              <div className="font-display text-3xl font-bold text-primary mb-1">100%</div>
+              <div className="text-sm text-muted-foreground">Fibra Óptica</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-400 mb-2">{cities.length}+</div>
-              <div className="text-gray-300">Cidades</div>
-              <div className="text-sm text-gray-400 mt-1">Em expansão</div>
+              <div className="font-display text-3xl font-bold text-secondary mb-1">{cities.length}+</div>
+              <div className="text-sm text-muted-foreground">Cidades</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-400 mb-2">24h</div>
-              <div className="text-gray-300">Suporte</div>
-              <div className="text-sm text-gray-400 mt-1">Sempre disponível</div>
+              <div className="font-display text-3xl font-bold text-foreground mb-1">24h</div>
+              <div className="text-sm text-muted-foreground">Suporte</div>
             </div>
           </div>
         </div>
