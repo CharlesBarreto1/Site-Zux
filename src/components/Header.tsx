@@ -92,7 +92,7 @@ const Header = () => {
               ))}
               <div className="px-4 pt-4 mt-2 border-t border-border/50 space-y-3">
                 <Button variant="outline" asChild className="w-full border-border text-muted-foreground">
-                  <a href="https://erp.zux.net.br/central/" target="_blank" rel="noopener noreferrer">
+                  <a href="https://api.wifire.hubsoft.com.br/" target="_blank" rel="noopener noreferrer">
                     Central do Assinante
                   </a>
                 </Button>
