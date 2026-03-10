@@ -60,7 +60,7 @@ const Header = () => {
 
           <div className="hidden lg:flex items-center gap-3">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground" asChild>
-              <a href="https://erp.zux.net.br/central/" target="_blank" rel="noopener noreferrer">
+              <a href="https://api.wifire.hubsoft.com.br/" target="_blank" rel="noopener noreferrer">
                 Central do Assinante
               </a>
             </Button>
