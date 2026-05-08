@@ -1,33 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { MapPin, Check, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/integrations/supabase/client';
+import { CITY_LABELS } from '@/data/cities';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
 
 const CoverageSection = () => {
   const [selectedCity, setSelectedCity] = useState('');
-  const [cities, setCities] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('cities')
-          .select('name, state')
-          .eq('active', true)
-          .order('name');
-
-        if (error) { console.error('Error fetching cities:', error); return; }
-        setCities(data.map(city => `${city.name} - ${city.state}`));
-      } catch (error) {
-        console.error('Error fetching cities:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCities();
-  }, []);
+  const cities = CITY_LABELS;
 
   const checkCoverage = () => {
     if (selectedCity) {
@@ -46,7 +25,7 @@ const CoverageSection = () => {
             Internet Fibra Óptica em <span className="text-gradient">Campo Mourão</span> e Região
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Líder em internet fibra óptica em Campo Mourão, Luiziana, Barbosa Ferraz, 
+            Líder em internet fibra óptica em Campo Mourão, Luiziana, Barbosa Ferraz,
             Corumbataí do Sul e Iretama.
           </p>
         </div>
@@ -56,11 +35,9 @@ const CoverageSection = () => {
             <h3 className="font-display text-xl font-bold text-foreground">
               Cidades Atendidas
             </h3>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {loading ? (
-                <div className="col-span-2 text-center text-muted-foreground py-8">Carregando cidades...</div>
-              ) : cities.map((city, index) => (
+              {cities.map((city, index) => (
                 <button
                   key={index}
                   className={`glass-card !p-4 flex items-center gap-3 text-left transition-all cursor-pointer ${
@@ -100,16 +77,15 @@ const CoverageSection = () => {
               <h3 className="font-display text-xl font-bold text-foreground">Verificar Cobertura</h3>
               <p className="text-sm text-muted-foreground">Selecione sua cidade para verificar disponibilidade</p>
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">Sua cidade:</label>
-              <select 
+              <select
                 className="w-full p-3 rounded-xl bg-muted border border-border text-foreground focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm"
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
-                disabled={loading}
               >
-                <option value="">{loading ? "Carregando..." : "Escolha uma cidade..."}</option>
+                <option value="">Escolha uma cidade...</option>
                 {cities.map((city, index) => (
                   <option key={index} value={city}>{city}</option>
                 ))}

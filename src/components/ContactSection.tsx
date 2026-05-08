@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, Instagram, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { z } from 'zod';
+import { CITY_LABELS } from '@/data/cities';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
 
 const contactSchema = z.object({
@@ -18,27 +18,16 @@ const ContactSection = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', city: '', message: '' });
 
-  const cities = [
-    'Maringá-PR', 'Paiçandu-PR', 'Astorga-PR', 'Jandaia do Sul-PR',
-    'Apucarana-PR', 'Arapongas-PR', 'Floresta-PR', 'Cianorte-PR',
-    'Campo Mourão-PR', 'Umuarama-PR', 'Barbosa Ferraz-PR', 'São Pedro do Ivaí-PR'
-  ];
+  const cities = CITY_LABELS;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const v = contactSchema.parse(formData);
-      
-      const { error } = await supabase.from('leads').insert([{
-        name: v.name, email: v.email, phone: v.phone, city: v.city,
-        message: v.message || '', plan_type: 'fibra', source: 'formulario_contato'
-      }]);
-
-      if (error) throw new Error('Erro ao salvar dados');
 
       const message = `Olá! Gostaria de mais informações sobre os planos da Zux Internet.\n\n*Dados de Contato:*\nNome: ${v.name}\nEmail: ${v.email}\nTelefone: ${v.phone}\nCidade: ${v.city}\n\n*Mensagem:*\n${v.message || 'Não informada'}`;
       window.location.assign(getWhatsAppUrl(message));
@@ -89,7 +78,7 @@ const ContactSection = () => {
                 <p className="text-xs text-muted-foreground">Preencha e será redirecionado ao WhatsApp</p>
               </div>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
