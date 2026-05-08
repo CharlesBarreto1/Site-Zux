@@ -1,4 +1,4 @@
-export const WHATSAPP_PHONE_E164 = "5544920049139";
+export const WHATSAPP_PHONE_E164 = "554431102530";
 
 /**
  * Returns a WhatsApp wa.me URL.

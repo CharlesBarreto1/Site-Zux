@@ -64,7 +64,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-primary" />
-                <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">(44) 92004-9139</a>
+                <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-foreground transition-colors">(44) 3110-2530</a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-primary" />

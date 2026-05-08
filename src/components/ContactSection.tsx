@@ -46,7 +46,7 @@ const ContactSection = () => {
   const inputClass = "w-full p-3 rounded-xl bg-muted border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-primary transition-colors text-sm";
 
   const contactInfo = [
-    { icon: Phone, color: 'bg-primary', title: 'Telefone', content: <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">(44) 92004-9139</a>, sub: 'WhatsApp disponível 24h' },
+    { icon: Phone, color: 'bg-primary', title: 'Telefone', content: <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">(44) 3110-2530</a>, sub: 'WhatsApp disponível 24h' },
     { icon: Mail, color: 'bg-secondary', title: 'E-mail', content: <a href="mailto:contato@zux.net.br" className="text-primary hover:underline font-medium">contato@zux.net.br</a>, sub: 'Resposta em até 24h' },
     { icon: MapPin, color: 'bg-primary', title: 'Endereço', content: <span className="text-muted-foreground text-sm">Avenida Liberdade 1141, Centro<br/>Luiziana - PR, 87290-000</span>, sub: '' },
     { icon: Clock, color: 'bg-primary', title: 'Atendimento', content: <span className="text-muted-foreground text-sm">Seg-Sex: 8h–18h | Sáb: 8h–12h</span>, sub: 'Suporte técnico 24h' },

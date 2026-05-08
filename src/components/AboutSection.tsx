@@ -49,7 +49,7 @@ const AboutSection = () => {
               <div className="space-y-1 text-sm text-muted-foreground">
                 <p><strong className="text-foreground">Sede:</strong> Avenida Liberdade 1141, Centro</p>
                 <p>Luiziana - PR, CEP: 87290-000</p>
-                <p><strong className="text-foreground">Telefone:</strong> (44) 92004-9139</p>
+                <p><strong className="text-foreground">Telefone:</strong> (44) 3110-2530</p>
                 <p><strong className="text-foreground">E-mail:</strong> contato@zux.net.br</p>
               </div>
             </div>

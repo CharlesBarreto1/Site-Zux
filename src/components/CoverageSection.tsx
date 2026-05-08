@@ -107,7 +107,7 @@ const CoverageSection = () => {
             </Button>
 
             <p className="text-center text-xs text-muted-foreground">
-              Ou entre em contato: <strong className="text-foreground">(44) 92004-9139</strong>
+              Ou entre em contato: <strong className="text-foreground">(44) 3110-2530</strong>
             </p>
           </div>
         </div>
